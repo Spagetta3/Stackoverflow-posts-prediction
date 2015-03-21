@@ -8,7 +8,6 @@ xml = Nokogiri::XML(file)
 question_rows = xml.xpath("//row[@PostTypeId=1]")
 #puts question_rows
 
-dasdasdasdasds
 ids = []
 titles = []
 bodies = []

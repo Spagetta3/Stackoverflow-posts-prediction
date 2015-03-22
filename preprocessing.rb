@@ -1,7 +1,7 @@
 require 'nokogiri'
 
-stop_words = File.open("data\\english_stop_words_mysql.txt", "r").read
-file = File.open("data\\stack_overflow_posts_sample.xml", "r")
+stop_words = File.open(File.join("data", "english_stop_words_mysql.txt"), "r").read
+file = File.open(File.join("data", "stack_overflow_posts_sample.xml"), "r")
 
 xml = Nokogiri::XML(file)
 

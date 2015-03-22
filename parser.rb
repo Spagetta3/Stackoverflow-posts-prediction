@@ -3,8 +3,8 @@ require 'csv'
 
 #Stop_words_long = File.open(File.join("data", "stop_words_long.txt"), "r").read.split(/\s+/)
 #Stop_words_mysql = File.open(File.join("data", "stop_words_mysql.txt"), "r").read.split(/\s+/)
-Stop_words = File.open(File.join("data", "stop_words_zeng.txt"), "r").read.split(/\s+/)
-Regex_to_delete = File.open(File.join("data", "regex_words_to_delete.txt"), "r").read.split(/\s+/)
+Stop_words = File.open(File.join("data", "stop_words_zeng.txt"), "r:UTF-8").read.split(/\s+/)
+Regex_to_delete = File.open(File.join("data", "regex_words_to_delete.txt"), "r:UTF-8").read.split(/\s+/)
 
 def delete_words(word)
   Regex_to_delete.each do |w|
@@ -15,15 +15,16 @@ end
 
 def filter_stop_words(words)
   words.select! {|word| not Stop_words.include?(word.downcase)}
+  words
 end
 
 
-file = File.open(File.join("data", "stack_overflow_posts_sample.xml"), "r")
+file = File.open(File.join("data", "stack_overflow_posts_sample.xml"), "r:UTF-8")
 xml = Nokogiri::XML(file)
 
 question_rows = xml.xpath("//row[@PostTypeId=1]")
 
-csv_out_file = CSV.open(File.join("data", "sample_output.csv"), "wb")
+csv_out_file = CSV.open(File.join("data", "sample_output.csv"), "wb:UTF-8")
 question_rows.each do |row|
   id = row.at_xpath("@Id").content
 

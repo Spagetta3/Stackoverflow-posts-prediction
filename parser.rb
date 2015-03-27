@@ -26,18 +26,18 @@ question_rows = xml.xpath("//row[@PostTypeId=1]")
 
 csv_out_file = CSV.open(File.join("data", "sample_output.csv"), "wb:UTF-8")
 question_rows.each do |row|
-  id = row.at_xpath("@Id").content
+  id = row.at_xpath("@Id").content.downcase
 
-  title = row.at_xpath("@Title").content
+  title = row.at_xpath("@Title").content.downcase
   title = delete_words(title)
   filtered_title = filter_stop_words(title.split(" ")).join(" ")
 
 
-  body = row.at_xpath("@Body").content
+  body = row.at_xpath("@Body").content.downcase
   body = delete_words(body)
   filtered_body = filter_stop_words(body.split(" ")).join(" ")
 
-  tags = row.at_xpath("@Tags").content
+  tags = row.at_xpath("@Tags").content.downcase
   tags = tags.gsub!(/[<>]/, " ").strip.split(" ")
 
   csv_line = []

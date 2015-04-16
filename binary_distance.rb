@@ -39,13 +39,10 @@ class BinaryDistance
       num1 = seq1[i]
       num2 = seq2[i]
 
-      if(num1 == "1" && num2 == "1")
-        t11 += 1
-      elsif(num1 == "1")
-        t10 += 1
-      elsif(num2 == "1")
-        t01 += 1
-      end
+      t11 += 1 if(num1 == "1" && num2 == "1")
+      t10 += 1 if(num1 == "1")
+      t01 += 1 if(num2 == "1")
+
     end
     1 - (t11.to_f/(t01 + t10 - t11))
   end

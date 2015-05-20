@@ -62,6 +62,7 @@ class Get_tfidf
       @number_of_documents += 1
       line = line.strip
       fields = line.split(',')
+      #puts fields.join("|")
       words = fields[1].split(' ')
       words.each do |w|
         if (hash_words_in_current_document[w] == nil)
@@ -82,6 +83,70 @@ class Get_tfidf
         end
       end
     end
+    puts "velkost hasha " + @hash_words.length.to_s
+  end
+
+  def get_hash_words_from_file
+    @hash_words = Hash.new
+    @input_file.each do |line|
+      line = line.strip
+      fields = line.split(',')
+      if (@hash_words[fields[0]] == nil)
+        @hash_words[fields[0]] = fields[0]
+      end
+    end
+    puts "velkost hasha " + @hash_words.length.to_s
+  end
+
+  def get_sample_output_vector_csv(hash_words, file)
+    puts hash_words
+    counter = 0
+    csv_out_file = CSV.open(file, "wb:UTF-8")
+    @input_file.each do |line|
+      if (counter % 10000 == 0)
+        puts "vector" + counter.to_s
+      end
+      line = line.strip
+      hash_words_in_current_document = Hash.new
+      fields = line.split(',')
+      words = fields[1].split(' ')
+
+      words.each do |w|
+        if (hash_words_in_current_document[w] == nil)
+          hash_words_in_current_document[w] = w
+        end
+      end
+
+      words = fields[2].split(' ')
+
+      words.each do |w|
+        if (hash_words_in_current_document[w] == nil)
+          hash_words_in_current_document[w] = w
+        end
+      end
+
+      #vector_of_words = ""
+      csv_line = []
+      csv_line << fields[0]
+      csv_line << fields[1]
+      csv_line << fields[2]
+
+      hash_words.each do |k, v|
+        if (hash_words_in_current_document[k] != nil)
+          #vector_of_words += "1,"
+          csv_line << 1
+        else
+          #vector_of_words += "0,"
+          csv_line << 0
+        end
+      end
+
+      #csv_line << vector_of_words
+      # pridaj vektor tagov
+      csv_out_file << csv_line
+      counter += 1
+    end
+
     puts "velkost hasha " + @hash_words.length.to_s
   end
 
@@ -144,6 +209,8 @@ class Get_tfidf
       csv_out_file << csv_line
       counter += 1
     end
+
+    csv_out_file.flush
     csv_out_file.close
   end
 
@@ -233,7 +300,7 @@ class Get_tfidf
         words[counter] = new_word
         counter += 1
       end
-      
+
       words = words.sort_by { |a| a.get_tf_idf}.reverse
 
       counter_words = 0
@@ -250,9 +317,10 @@ class Get_tfidf
     csv_out_file.close
   end
 
-  def get_hash_output(hash_words)
+
+  def get_hash_output(hash_words, name)
     counter = 0
-    csv_out_file = CSV.open(File.join("data", "sample_output_hash_new.csv"), "wb:UTF-8")
+    csv_out_file = CSV.open(File.join(name), "wb:UTF-8")
     hash_words.each do |k,v|
       csv_line = []
       csv_line << hash_words[k].get_word
